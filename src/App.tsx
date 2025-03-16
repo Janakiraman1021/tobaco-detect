@@ -6,11 +6,14 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import DataEntry from './pages/DataEntry';
+import UserManagement from './pages/UserManagement';
+import { ConnectivityCheck } from './components/ConnectivityCheck';
+import { Toaster } from 'react-hot-toast';
 
-const ProtectedRoute = ({ children, allowedRole }: { children: React.ReactNode; allowedRole: 'admin' | 'data-entry' }) => {
-  const { isAuthenticated, role } = useAuthStore();
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const token = useAuthStore(state => state.token);
   
-  if (!isAuthenticated || role !== allowedRole) {
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
   
@@ -19,30 +22,35 @@ const ProtectedRoute = ({ children, allowedRole }: { children: React.ReactNode; 
 
 function App() {
   return (
-    <BrowserRouter>
-      <AnimatePresence mode="wait">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute allowedRole="admin">
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/data-entry" 
-            element={
-              <ProtectedRoute allowedRole="data-entry">
-                <DataEntry />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
-      </AnimatePresence>
-    </BrowserRouter>
+    <>
+      <Toaster position="top-right" />
+      <ConnectivityCheck />
+      <BrowserRouter>
+        <AnimatePresence mode="wait">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/data-entry" 
+              element={
+                <ProtectedRoute>
+                  <DataEntry />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="/user-management" element={<UserManagement />} />
+          </Routes>
+        </AnimatePresence>
+      </BrowserRouter>
+    </>
   );
 }
 
