@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 import { 
   Search, Filter, Download, Users, Activity, Thermometer,
-  Database, LogOut, SlidersHorizontal
+  Database, LogOut, SlidersHorizontal, RefreshCw
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../lib/store';
@@ -116,6 +116,9 @@ export default function Dashboard() {
 
   const [monthlyData, setMonthlyData] = useState<MonthlyStats[]>([]);
 
+  // Add loading state for refresh button
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -177,6 +180,16 @@ export default function Dashboard() {
       setError('Failed to load entries');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Add refresh function
+  const handleRefresh = async () => {
+    try {
+      setIsRefreshing(true);
+      await fetchEntries();
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -401,6 +414,20 @@ export default function Dashboard() {
                   className="pl-10 pr-4 py-2 bg-background/50 border border-primary-500/30 rounded-lg input-glow"
                 />
               </div>
+
+              {/* Add Refresh Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className={`flex items-center gap-2 px-4 py-2 bg-primary-500/20 text-primary-400 rounded-lg ${
+                  isRefreshing ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                {isRefreshing ? 'Refreshing...' : 'Refresh'}
+              </motion.button>
 
               <motion.button
                 whileHover={{ scale: 1.05 }}
