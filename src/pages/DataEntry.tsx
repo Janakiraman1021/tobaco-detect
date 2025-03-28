@@ -16,7 +16,7 @@ const dataEntrySchema = z.object({
   // userType: z.enum(['Non-user', 'Regular User', 'Addict']),
   timeMins: z.number().min(0).max(60),
   phLevel: z.number().min(0).max(14),
-  conductivity: z.number().min(0),
+  Nicotene: z.number().min(0),
   temperature: z.number().min(0),
   substanceDetected: z.string().min(1, 'Substance detection is required')
 });
@@ -42,7 +42,7 @@ export default function DataEntry() {
       // userType: 'Non-user',
       timeMins: 30,
       phLevel: 7.5,
-      conductivity: 150.5,
+      Nicotene: 150.5,
       temperature: 25.6,
       substanceDetected: 'None'
     }
@@ -167,12 +167,12 @@ export default function DataEntry() {
             <input
               type="number"
               step="0.1" // For decimal precision
-              {...register('conductivity', { valueAsNumber: true })}
+              {...register('Nicotene', { valueAsNumber: true })}
               min="0"
               className="w-full bg-background/50 border border-primary-500/30 rounded-lg py-3 px-4 input-glow"
             />
-            {errors.conductivity && (
-              <p className="text-red-500 text-sm mt-1">{errors.conductivity.message}</p>
+            {errors.Nicotene && (
+              <p className="text-red-500 text-sm mt-1">{errors.Nicotene.message}</p>
             )}
           </div>
           <div>
