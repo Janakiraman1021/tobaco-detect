@@ -56,37 +56,24 @@ export default function DataEntry() {
   // Update the onSubmit function
   const onSubmit = async (data: DataEntryForm) => {
     try {
-      console.log('Submitting data:', data);
-
-      // Fix: Use correct endpoint without auth token
+      const sampleId = generateSampleId();
+      console.log('Submitting data:', { ...data, sampleId });
+  
       const response = await api.post('/data/entry', {
-        institutionName: data.institutionName,
-        rollNumber: data.rollNumber,
-        name: data.name,
-        //userType: data.userType,
-        timeMins: data.timeMins,
-        phLevel: data.phLevel,
-        conductivity: data.conductivity,
-        temperature: data.temperature,
-        // substanceDetected: data.substanceDetected
+        ...data,
+        sampleId
       });
-
+  
       console.log('Server response:', response.data);
-
+  
       if (response.data.success) {
         alert('Data entry saved successfully!');
-        // Reset form with new values
         reset({
           ...data,
+          sampleId: generateSampleId(), // Reset with new ID
           name: '',
           rollNumber: '',
-          substanceDetected: 'None',
-          userType: 'Non-user',
-          timeMins: 30,
-          phLevel: 7.5,
-          conductivity: 150.5,
-          temperature: 25.6,
-          institutionName: data.institutionName // Keep the institution name
+          substanceDetected: 'None'
         });
       }
     } catch (error: any) {
@@ -94,6 +81,7 @@ export default function DataEntry() {
       alert(error.response?.data?.message || 'Failed to save data. Please try again.');
     }
   };
+  
 
   return (
     <motion.div
