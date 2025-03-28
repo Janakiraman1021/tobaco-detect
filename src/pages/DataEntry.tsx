@@ -13,7 +13,7 @@ const dataEntrySchema = z.object({
   institutionName: z.string().min(1, 'Institution name is required'),
   rollNumber: z.string().min(1, 'Roll number is required'),
   name: z.string().min(1, 'Name is required'),
-  userType: z.enum(['Non-user', 'Regular User', 'Addict']),
+  // userType: z.enum(['Non-user', 'Regular User', 'Addict']),
   timeMins: z.number().min(0).max(60),
   phLevel: z.number().min(0).max(14),
   conductivity: z.number().min(0),
@@ -39,7 +39,7 @@ export default function DataEntry() {
       institutionName: '',
       rollNumber: '',
       name: '',
-      userType: 'Non-user',
+      // userType: 'Non-user',
       timeMins: 30,
       phLevel: 7.5,
       conductivity: 150.5,
@@ -63,12 +63,12 @@ export default function DataEntry() {
         institutionName: data.institutionName,
         rollNumber: data.rollNumber,
         name: data.name,
-        userType: data.userType,
+        //userType: data.userType,
         timeMins: data.timeMins,
         phLevel: data.phLevel,
         conductivity: data.conductivity,
         temperature: data.temperature,
-        substanceDetected: data.substanceDetected
+        // substanceDetected: data.substanceDetected
       });
 
       console.log('Server response:', response.data);
@@ -136,7 +136,7 @@ export default function DataEntry() {
               <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
             )}
           </div>
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium mb-2">User Type</label>
             <select
               {...register('userType')}
@@ -145,10 +145,10 @@ export default function DataEntry() {
               <option value="Non-user">Non-user</option>
               <option value="Regular User">Regular User</option>
               <option value="Addict">Addict</option>
-            </select>
-          </div>
+            </select> */}
+          {/* </div> */}
           <div>
-            <label className="block text-sm font-medium mb-2">Time (mins)</label>
+            <label className="block text-sm font-medium mb-2">Time (Seconds)</label>
             <input
               type="number"
               {...register('timeMins', { valueAsNumber: true })}
@@ -175,7 +175,7 @@ export default function DataEntry() {
             )}
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Conductivity (µS/cm)</label>
+            <label className="block text-sm font-medium mb-2">Nicotine Level</label>
             <input
               type="number"
               step="0.1" // For decimal precision
@@ -200,17 +200,7 @@ export default function DataEntry() {
               <p className="text-red-500 text-sm mt-1">{errors.temperature.message}</p>
             )}
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Substance Detected</label>
-            <input
-              type="text"
-              {...register('substanceDetected')}
-              className="w-full bg-background/50 border border-primary-500/30 rounded-lg py-3 px-4 input-glow"
-            />
-            {errors.substanceDetected && (
-              <p className="text-red-500 text-sm mt-1">{errors.substanceDetected.message}</p>
-            )}
-          </div>
+
           {/* Add Sample ID field */}
           <div>
             <label className="block text-sm font-medium mb-2">Sample ID</label>

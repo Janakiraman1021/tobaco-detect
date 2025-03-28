@@ -18,6 +18,7 @@ export interface LoginCredentials {
 export interface LoginResponse {
   token: string;
   role: 'admin' | 'data-entry';
+  userId: string; // Add userId to response type
 }
 
 // Update the loginUser function
@@ -84,12 +85,13 @@ export default function Login() {
       console.log('✅ Login successful:', {
         email: data.email,
         role: response.role,
+        userId: response.userId,
         token: response.token.substring(0, 10) + '...',
         timestamp: new Date().toLocaleString()
       });
 
-      // Store the token and user data in auth store
-      login(response.token, response.role);
+      // Store the token, role and userId in auth store
+      login(response.token, response.role, response.userId);
       
       // Force a small delay to ensure state is updated
       await new Promise(resolve => setTimeout(resolve, 100));

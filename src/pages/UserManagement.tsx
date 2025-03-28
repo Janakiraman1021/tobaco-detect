@@ -62,6 +62,21 @@ export default function UserManagement() {
     }
   };
 
+  // Add deleteUser function after fetchUsers
+  const deleteUser = async (userId: string) => {
+    try {
+      const response = await api.delete(`/admin/data-entry-users/${userId}`);
+      if (response.data.success) {
+        // Refresh the users list after successful deletion
+        await fetchUsers();
+        alert('User deleted successfully');
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Failed to delete user. Please try again.');
+    }
+  };
+
   // Fix the createUser function
   const createUser = async (userData: typeof newUser) => {
     try {
@@ -105,6 +120,13 @@ export default function UserManagement() {
       const errorMessage = error instanceof Error ? error.message : 'Failed to create user';
       alert(errorMessage);
       console.error('Create user error:', error);
+    }
+  };
+
+  // Update the delete button in the table
+  const handleDelete = async (userId: string) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      await deleteUser(userId);
     }
   };
 
@@ -199,8 +221,8 @@ export default function UserManagement() {
                       </td>
                       <td className="py-4 px-6">
                         <button
-                          onClick={() => setUsers(users.filter(u => u._id !== user._id))}
-                          className="text-red-400 hover:text-red-300"
+                          onClick={() => handleDelete(user._id)}
+                          className="text-red-400 hover:text-red-300 transition-colors duration-200"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

@@ -14,9 +14,9 @@ import api from '../lib/api';
 
 // Mock data - replace with real data from your backend
 const mockData = [
-  { id: 1, institution: "Medical Center A", name: "John Doe", userType: "Regular User", time: 30, pH: 7.2, conductivity: 250, temperature: 37, substanceDetected: "Nicotine" },
-  { id: 2, institution: "Hospital B", name: "Jane Smith", userType: "Non-user", time: 25, pH: 6.8, conductivity: 180, temperature: 36.5, substanceDetected: "None" },
-  { id: 3, institution: "Research Lab C", name: "Mike Johnson", userType: "Addict", time: 45, pH: 7.5, conductivity: 300, temperature: 37.2, substanceDetected: "Nicotine" },
+  { id: 1, institution: "Medical Center A", name: "John Doe", userType: "Regular User", time: 30, pH: 7.2, Nicotene: 250, temperature: 37, substanceDetected: "Nicotine" },
+  { id: 2, institution: "Hospital B", name: "Jane Smith", userType: "Non-user", time: 25, pH: 6.8, Nicotene: 180, temperature: 36.5, substanceDetected: "None" },
+  { id: 3, institution: "Research Lab C", name: "Mike Johnson", userType: "Addict", time: 45, pH: 7.5, Nicotene: 300, temperature: 37.2, substanceDetected: "Nicotine" },
   // Add more mock data as needed
 ];
 
@@ -33,7 +33,7 @@ const analyticsData = [
 interface Filters {
   userType: string;
   phRange: string;
-  conductivityRange: string;
+  NicoteneRange: string;
   temperatureRange: string;
   substanceDetected: string;
   timeRange: string;
@@ -58,7 +58,7 @@ interface Entry {
   userType: 'Non-user' | 'Regular User' | 'Addict';
   timeMins: number;
   phLevel: number;
-  conductivity: number;
+  Nicotene: number;
   temperature: number;
   substanceDetected: string;
   createdBy: string | null;
@@ -97,7 +97,7 @@ export default function Dashboard() {
   const [filters, setFilters] = useState<Filters>({
     userType: 'all',
     phRange: 'all',
-    conductivityRange: 'all',
+    NicoteneRange: 'all',
     temperatureRange: 'all',
     substanceDetected: 'all',
     timeRange: 'all'
@@ -131,7 +131,7 @@ export default function Dashboard() {
       'User Type',
       'Time (mins)',
       'pH Level',
-      'Conductivity (µS/cm)',
+      'Nicotene (µS/cm)',
       'Temperature (°C)',
       'Substance Detected'
     ];
@@ -144,7 +144,7 @@ export default function Dashboard() {
         item.userType,
         item.timeMins,
         item.phLevel,
-        item.conductivity,
+        item.Nicotene,
         item.temperature,
         item.substanceDetected
       ].join(','))
@@ -263,10 +263,10 @@ export default function Dashboard() {
       filters.phRange === 'alkaline' ? item.phLevel > 7 : true
     );
 
-    const matchesConductivity = filters.conductivityRange === 'all' || (
-      filters.conductivityRange === 'low' ? item.conductivity < 200 :
-      filters.conductivityRange === 'medium' ? item.conductivity >= 200 && item.conductivity < 300 :
-      filters.conductivityRange === 'high' ? item.conductivity >= 300 : true
+    const matchesNicotene = filters.NicoteneRange === 'all' || (
+      filters.NicoteneRange === 'low' ? item.Nicotene < 200 :
+      filters.NicoteneRange === 'medium' ? item.Nicotene >= 200 && item.Nicotene < 300 :
+      filters.NicoteneRange === 'high' ? item.Nicotene >= 300 : true
     );
 
     const matchesTemperature = filters.temperatureRange === 'all' || (
@@ -285,8 +285,7 @@ export default function Dashboard() {
     );
 
     return matchesSearch && matchesUserType && matchesPhRange && 
-           matchesConductivity && matchesTemperature && 
-           matchesSubstance && matchesTime;
+           matchesNicotene && matchesTemperature;
   });
 
   return (
@@ -482,10 +481,10 @@ export default function Dashboard() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Conductivity</label>
+                <label className="block text-sm font-medium mb-2">Nicotene level</label>
                 <select
-                  value={filters.conductivityRange}
-                  onChange={(e) => setFilters({...filters, conductivityRange: e.target.value})}
+                  value={filters.NicoteneRange}
+                  onChange={(e) => setFilters({...filters, NicoteneRange: e.target.value})}
                   className="w-full bg-background/50 border border-primary-500/30 rounded-lg py-2 px-3 input-glow"
                 >
                   <option value="all">All Ranges</option>
@@ -509,7 +508,7 @@ export default function Dashboard() {
                 </select>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium mb-2">Substance</label>
                 <select
                   value={filters.substanceDetected}
@@ -520,7 +519,7 @@ export default function Dashboard() {
                   <option value="None">None</option>
                   <option value="Nicotine">Nicotine</option>
                 </select>
-              </div>
+              </div> */}
 
               <div>
                 <label className="block text-sm font-medium mb-2">Time Range</label>
@@ -551,11 +550,11 @@ export default function Dashboard() {
                     <th className="text-left py-4 px-6">Name</th>
                     <th className="text-left py-4 px-6">Roll Number</th>
                     <th className="text-left py-4 px-6">User Type</th>
-                    <th className="text-left py-4 px-6">Time (mins)</th>
+                    <th className="text-left py-4 px-6">Time (Secs)</th>
                     <th className="text-left py-4 px-6">pH Level</th>
-                    <th className="text-left py-4 px-6">Conductivity</th>
+                    <th className="text-left py-4 px-6">Nicotene</th>
                     <th className="text-left py-4 px-6">Temperature</th>
-                    <th className="text-left py-4 px-6">Substance</th>
+                    {/* <th className="text-left py-4 px-6">Substance</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -572,9 +571,9 @@ export default function Dashboard() {
                       <td className="py-4 px-6">{entry.userType}</td>
                       <td className="py-4 px-6">{entry.timeMins}</td>
                       <td className="py-4 px-6">{entry.phLevel}</td>
-                      <td className="py-4 px-6">{entry.conductivity}</td>
+                      <td className="py-4 px-6">{entry.Nicotene}</td>
                       <td className="py-4 px-6">{entry.temperature}°C</td>
-                      <td className="py-4 px-6">{entry.substanceDetected}</td>
+                      {/* <td className="py-4 px-6">{entry.substanceDetected}</td> */}
                     </motion.tr>
                   ))}
                 </tbody>
